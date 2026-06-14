@@ -1,4 +1,5 @@
 import { AmbientParticleLayer } from "@/components/AmbientParticleLayer";
+import { DepthPresentationSection } from "@/components/DepthPresentationSection";
 import { DiagnosticSection } from "@/components/DiagnosticSection";
 import { FAQSection } from "@/components/FAQSection";
 import { Footer } from "@/components/Footer";
@@ -29,6 +30,7 @@ export default function Home() {
       <Hero />
       <ProofStrip />
       <HelixPresentationSection />
+      <DepthPresentationSection />
       <ProblemSection />
       <ScrollStorySection />
       <ServiceGrid />
