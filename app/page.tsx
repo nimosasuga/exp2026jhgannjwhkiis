@@ -59,6 +59,8 @@ const stages = [
 ];
 
 const services = ["Website Premium", "Landing Conversion", "WhatsApp AI", "Dashboard Bisnis", "Automation Flow", "Growth Architecture"];
+const panelLabels = ["Lead capture", "Automation route", "Growth signal"];
+const panelIcons = [Workflow, Layers3, Cpu];
 
 const shards = Array.from({ length: 88 }, (_, index) => ({
   id: index,
@@ -70,6 +72,8 @@ const shards = Array.from({ length: 88 }, (_, index) => ({
   rotate: ((index * 31) % 240) - 120,
   opacity: 0.12 + ((index % 8) * 0.055),
 }));
+
+type ScrollProgress = ReturnType<typeof useScroll>["scrollYProgress"];
 
 function Header() {
   return (
@@ -92,7 +96,7 @@ function Header() {
   );
 }
 
-function Shard({ shard, progress }: { shard: (typeof shards)[number]; progress: ReturnType<typeof useScroll>["scrollYProgress"] }) {
+function Shard({ shard, progress }: { shard: (typeof shards)[number]; progress: ScrollProgress }) {
   const x = useTransform(progress, [0, 0.28, 0.62, 1], [0, shard.dx * 0.2, shard.dx, shard.dx * -0.15]);
   const y = useTransform(progress, [0, 0.28, 0.62, 1], [0, shard.dy * 0.2, shard.dy, shard.dy * -0.12]);
   const rotate = useTransform(progress, [0, 0.58, 1], [0, shard.rotate, shard.rotate * -0.25]);
@@ -107,13 +111,53 @@ function Shard({ shard, progress }: { shard: (typeof shards)[number]; progress: 
   );
 }
 
+function ProgressBar({ progress, value, index, stageIndex }: { progress: ScrollProgress; value: number; index: number; stageIndex: number }) {
+  const width = useTransform(progress, [0, 0.5, 1], [`${Math.max(18, value - 24)}%`, `${value}%`, `${Math.max(26, value - stageIndex * 7 - index * 2)}%`]);
+
+  return (
+    <div className="h-3 overflow-hidden rounded-full bg-white/10">
+      <motion.div style={{ width }} className="h-full rounded-full bg-white" />
+    </div>
+  );
+}
+
+function ServiceCard({ service, index, progress }: { service: string; index: number; progress: ScrollProgress }) {
+  const y = useTransform(progress, [0, 0.5, 1], [24 + index * 10, 0, -18 - index * 4]);
+
+  return (
+    <motion.div style={{ y }} className="rounded-[2rem] border border-slate-200 bg-slate-50 p-6">
+      <CheckCircle2 className="h-6 w-6 text-slate-950" />
+      <p className="mt-4 text-xl font-black tracking-[-0.04em] text-slate-950">{service}</p>
+      <p className="mt-2 text-sm leading-6 text-slate-500">Layer 0{index + 1} dari arsitektur digital.</p>
+    </motion.div>
+  );
+}
+
+function LayerPanel({ index, progress }: { index: number; progress: ScrollProgress }) {
+  const y = useTransform(progress, [0, 0.5, 1], [24 + index * 10, 0, -18 - index * 6]);
+  const PanelIcon = panelIcons[index];
+
+  return (
+    <motion.div style={{ y }} className="rounded-[2rem] border border-slate-200 bg-slate-50 p-6">
+      <div className="flex items-start gap-4">
+        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-white text-slate-950 shadow-lg shadow-slate-200">
+          <PanelIcon className="h-5 w-5" />
+        </div>
+        <div>
+          <p className="font-mono text-xs font-black uppercase tracking-[0.2em] text-slate-400">Layer 0{index + 1}</p>
+          <p className="mt-2 text-xl font-black tracking-[-0.04em] text-slate-950">{panelLabels[index]}</p>
+        </div>
+      </div>
+    </motion.div>
+  );
+}
+
 function StickyStage({ stage, index }: { stage: (typeof stages)[number]; index: number }) {
   const ref = useRef<HTMLElement | null>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end end"] });
   const Icon = stage.icon;
 
-  const light = index % 2 === 0;
-  const bg = light ? "bg-[#f8f7f2]" : "bg-white";
+  const bg = index % 2 === 0 ? "bg-[#f8f7f2]" : "bg-white";
   const cardX = useTransform(scrollYProgress, [0, 0.45, 1], [index % 2 ? 120 : -120, 0, index % 2 ? -80 : 80]);
   const cardY = useTransform(scrollYProgress, [0, 0.45, 1], [80, 0, -80]);
   const rotateY = useTransform(scrollYProgress, [0, 0.5, 1], [index % 2 ? -18 : 18, 0, index % 2 ? 14 : -14]);
@@ -128,10 +172,7 @@ function StickyStage({ stage, index }: { stage: (typeof stages)[number]; index: 
     <section ref={ref} className={`relative h-[165vh] overflow-clip ${bg}`}>
       <motion.div style={{ opacity: darkLayer }} className="absolute inset-0 bg-slate-950" />
       <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(15,23,42,0.07)_1px,transparent_1px),linear-gradient(to_bottom,rgba(15,23,42,0.07)_1px,transparent_1px)] bg-[size:52px_52px] opacity-35" />
-      <motion.div
-        style={{ x: beamX, rotate: beamRotate }}
-        className="absolute -top-32 left-1/2 h-[130vh] w-[34vw] rounded-full bg-white/80 blur-3xl"
-      />
+      <motion.div style={{ x: beamX, rotate: beamRotate }} className="absolute -top-32 left-1/2 h-[130vh] w-[34vw] rounded-full bg-white/80 blur-3xl" />
       <div className="absolute right-0 top-1/4 h-96 w-96 rounded-full bg-slate-200/70 blur-3xl" />
 
       <div className="sticky top-0 flex h-screen items-center px-6 py-8 lg:px-10">
@@ -158,10 +199,7 @@ function StickyStage({ stage, index }: { stage: (typeof stages)[number]; index: 
               <Shard key={`${index}-${shard.id}`} shard={shard} progress={scrollYProgress} />
             ))}
 
-            <motion.div
-              style={{ x: cardX, y: cardY, rotateX, rotateY, scale, filter: blur }}
-              className="absolute inset-0 rounded-[3rem] border border-slate-200 bg-white p-5 shadow-[0_90px_220px_rgba(15,23,42,0.24)] [transform-style:preserve-3d]"
-            >
+            <motion.div style={{ x: cardX, y: cardY, rotateX, rotateY, scale, filter: blur }} className="absolute inset-0 rounded-[3rem] border border-slate-200 bg-white p-5 shadow-[0_90px_220px_rgba(15,23,42,0.24)] [transform-style:preserve-3d]">
               <div className="flex items-center justify-between border-b border-slate-200 pb-4">
                 <div className="flex gap-2">
                   <span className="h-3 w-3 rounded-full bg-slate-200" />
@@ -183,46 +221,15 @@ function StickyStage({ stage, index }: { stage: (typeof stages)[number]; index: 
                   <p className="mt-2 text-sm font-bold uppercase tracking-[0.18em] text-slate-400">{stage.label}</p>
                   <div className="mt-8 space-y-3">
                     {[82, 64, 48, 72].map((value, barIndex) => (
-                      <div key={barIndex} className="h-3 overflow-hidden rounded-full bg-white/10">
-                        <motion.div
-                          style={{ width: useTransform(scrollYProgress, [0, 0.5, 1], [`${Math.max(18, value - 24)}%`, `${value}%`, `${Math.max(26, value - index * 7)}%`]) }}
-                          className="h-full rounded-full bg-white"
-                        />
-                      </div>
+                      <ProgressBar key={barIndex} progress={scrollYProgress} value={value} index={barIndex} stageIndex={index} />
                     ))}
                   </div>
                 </div>
 
                 <div className="grid gap-5">
                   {index === 3
-                    ? services.slice(0, 3).map((service, itemIndex) => (
-                        <motion.div
-                          key={service}
-                          style={{ y: useTransform(scrollYProgress, [0, 0.5, 1], [24, 0, -18]) }}
-                          className="rounded-[2rem] border border-slate-200 bg-slate-50 p-6"
-                        >
-                          <CheckCircle2 className="h-6 w-6 text-slate-950" />
-                          <p className="mt-4 text-xl font-black tracking-[-0.04em] text-slate-950">{service}</p>
-                          <p className="mt-2 text-sm leading-6 text-slate-500">Layer 0{itemIndex + 1} dari arsitektur digital.</p>
-                        </motion.div>
-                      ))
-                    : [Workflow, Layers3, Cpu].map((PanelIcon, itemIndex) => (
-                        <motion.div
-                          key={itemIndex}
-                          style={{ y: useTransform(scrollYProgress, [0, 0.5, 1], [24 + itemIndex * 10, 0, -18 - itemIndex * 6]) }}
-                          className="rounded-[2rem] border border-slate-200 bg-slate-50 p-6"
-                        >
-                          <div className="flex items-start gap-4">
-                            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-white text-slate-950 shadow-lg shadow-slate-200">
-                              <PanelIcon className="h-5 w-5" />
-                            </div>
-                            <div>
-                              <p className="font-mono text-xs font-black uppercase tracking-[0.2em] text-slate-400">Layer 0{itemIndex + 1}</p>
-                              <p className="mt-2 text-xl font-black tracking-[-0.04em] text-slate-950">{["Lead capture", "Automation route", "Growth signal"][itemIndex]}</p>
-                            </div>
-                          </div>
-                        </motion.div>
-                      ))}
+                    ? services.slice(0, 3).map((service, itemIndex) => <ServiceCard key={service} service={service} index={itemIndex} progress={scrollYProgress} />)
+                    : panelLabels.map((_, itemIndex) => <LayerPanel key={itemIndex} index={itemIndex} progress={scrollYProgress} />)}
                 </div>
               </div>
             </motion.div>
