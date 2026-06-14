@@ -38,7 +38,7 @@ export function ServiceGrid() {
                   <p className="mt-5 font-mono text-xs font-bold text-slate-600">0{index + 1}</p>
                 </div>
 
-                <span className="flex h-13 w-13 items-center justify-center rounded-2xl bg-cyan-300 text-slate-950 shadow-xl shadow-cyan-950/30 transition duration-500 group-hover:rotate-6 group-hover:bg-white">
+                <span className="flex h-[52px] w-[52px] items-center justify-center rounded-2xl bg-cyan-300 text-slate-950 shadow-xl shadow-cyan-950/30 transition duration-500 group-hover:rotate-6 group-hover:bg-white">
                   <Icon className="h-6 w-6" />
                 </span>
               </div>
