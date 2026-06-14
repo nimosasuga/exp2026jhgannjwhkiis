@@ -1,14 +1,18 @@
 "use client";
 
-import type { ComponentPropsWithoutRef, ReactNode } from "react";
-import { motion } from "motion/react";
+import type { ReactNode } from "react";
+import { motion, type HTMLMotionProps } from "motion/react";
 
-type AnimatedSectionProps = ComponentPropsWithoutRef<"section"> & {
+type AnimatedSectionProps = Omit<
+  HTMLMotionProps<"section">,
+  "initial" | "whileInView" | "viewport" | "transition"
+> & {
   children: ReactNode;
+  className?: string;
   delay?: number;
 };
 
-export function AnimatedSection({
+export default function AnimatedSection({
   children,
   className = "",
   delay = 0,
@@ -19,7 +23,11 @@ export function AnimatedSection({
       initial={{ y: 28 }}
       whileInView={{ y: 0 }}
       viewport={{ once: true, amount: 0.12 }}
-      transition={{ duration: 0.65, delay, ease: [0.22, 1, 0.36, 1] }}
+      transition={{
+        duration: 0.7,
+        delay,
+        ease: [0.22, 1, 0.36, 1],
+      }}
       className={className}
       {...props}
     >
