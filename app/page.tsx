@@ -7,6 +7,7 @@ import { PackageSection } from "@/components/PackageSection";
 import { ProblemSection } from "@/components/ProblemSection";
 import { ProcessSection } from "@/components/ProcessSection";
 import { ProofStrip } from "@/components/ProofStrip";
+import { ScrollStorySection } from "@/components/ScrollStorySection";
 import { ServiceGrid } from "@/components/ServiceGrid";
 import { VisualShowcase } from "@/components/VisualShowcase";
 import { jsonLd } from "@/data/site";
@@ -25,6 +26,7 @@ export default function Home() {
       <Hero />
       <ProofStrip />
       <ProblemSection />
+      <ScrollStorySection />
       <ServiceGrid />
       <VisualShowcase />
       <ProcessSection />
