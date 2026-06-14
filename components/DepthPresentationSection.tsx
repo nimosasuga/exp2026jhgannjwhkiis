@@ -1,12 +1,49 @@
 "use client";
 
-import { useRef } from "react";
+import { useMemo, useRef } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 
 function Orb() {
   const group = useRef<THREE.Group>(null);
   const core = useRef<THREE.Mesh>(null);
+  const points = useRef<THREE.Points>(null);
+  const lines = useRef<THREE.LineSegments>(null);
+
+  const cloud = useMemo(() => {
+    const count = 520;
+    const data = new Float32Array(count * 3);
+    for (let i = 0; i < count; i += 1) {
+      const radius = 1.55 + Math.random() * 1.8;
+      const theta = Math.random() * Math.PI * 2;
+      const phi = Math.acos(2 * Math.random() - 1);
+      const p = i * 3;
+      data[p] = radius * Math.sin(phi) * Math.cos(theta);
+      data[p + 1] = radius * Math.sin(phi) * Math.sin(theta);
+      data[p + 2] = radius * Math.cos(phi);
+    }
+    return data;
+  }, []);
+
+  const network = useMemo(() => {
+    const nodes = Array.from({ length: 15 }, (_, i) => {
+      const a = (i / 15) * Math.PI * 2;
+      const r = 2.15 + (i % 3) * 0.28;
+      return new THREE.Vector3(Math.cos(a) * r, Math.sin(i * 1.37) * 1.15, Math.sin(a) * r);
+    });
+    const data = new Float32Array(nodes.length * 2 * 3);
+    nodes.forEach((node, i) => {
+      const next = nodes[(i + 4) % nodes.length];
+      const p = i * 6;
+      data[p] = node.x;
+      data[p + 1] = node.y;
+      data[p + 2] = node.z;
+      data[p + 3] = next.x;
+      data[p + 4] = next.y;
+      data[p + 5] = next.z;
+    });
+    return data;
+  }, []);
 
   useFrame(({ clock, pointer }) => {
     const t = clock.getElapsedTime();
@@ -16,25 +53,45 @@ function Orb() {
     }
     if (core.current) {
       core.current.rotation.y = t * 0.55;
+      core.current.rotation.x = t * 0.18;
       core.current.scale.setScalar(1 + Math.sin(t * 1.6) * 0.06);
     }
+    if (points.current) points.current.rotation.y = -t * 0.08;
+    if (lines.current) lines.current.rotation.y = t * 0.16;
   });
 
   return (
     <group ref={group}>
       <ambientLight intensity={0.8} />
       <pointLight position={[3, 3, 4]} intensity={5} color="#67E8F9" />
+      <pointLight position={[-3, -2, 3]} intensity={2.4} color="#6EE7B7" />
+
+      <points ref={points}>
+        <bufferGeometry>
+          <bufferAttribute attach="attributes-position" args={[cloud, 3]} />
+        </bufferGeometry>
+        <pointsMaterial size={0.018} color="#A5F3FC" transparent opacity={0.7} depthWrite={false} sizeAttenuation />
+      </points>
+
+      <lineSegments ref={lines}>
+        <bufferGeometry>
+          <bufferAttribute attach="attributes-position" args={[network, 3]} />
+        </bufferGeometry>
+        <lineBasicMaterial color="#67E8F9" transparent opacity={0.32} />
+      </lineSegments>
+
       <mesh ref={core}>
         <icosahedronGeometry args={[1.2, 4]} />
         <meshStandardMaterial color="#22D3EE" roughness={0.16} metalness={0.7} transparent opacity={0.34} wireframe />
       </mesh>
+
       <mesh rotation={[Math.PI / 2, 0, 0]}>
         <torusGeometry args={[2.1, 0.015, 12, 160]} />
-        <meshBasicMaterial color="#67E8F9" transparent opacity={0.8} />
+        <meshBasicMaterial color="#67E8F9" transparent opacity={0.82} />
       </mesh>
       <mesh rotation={[Math.PI / 2.5, 0.4, 0]}>
         <torusGeometry args={[2.85, 0.01, 12, 190]} />
-        <meshBasicMaterial color="#6EE7B7" transparent opacity={0.45} />
+        <meshBasicMaterial color="#6EE7B7" transparent opacity={0.48} />
       </mesh>
     </group>
   );
@@ -43,7 +100,7 @@ function Orb() {
 export function DepthPresentationSection() {
   return (
     <section id="depth-impact" className="relative z-10 min-h-screen overflow-hidden px-6 py-24 text-white lg:px-10">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_40%,rgba(34,211,238,0.26),transparent_32%),radial-gradient(circle_at_75%_60%,rgba(16,185,129,0.18),transparent_34%),linear-gradient(180deg,rgba(5,6,10,0.04),rgba(5,6,10,0.9))]" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_40%,rgba(34,211,238,0.28),transparent_32%),radial-gradient(circle_at_75%_60%,rgba(16,185,129,0.2),transparent_34%),linear-gradient(180deg,rgba(5,6,10,0.04),rgba(5,6,10,0.9))]" />
       <div className="absolute inset-0 premium-grid opacity-25" />
 
       <div className="relative mx-auto grid min-h-[calc(100vh-12rem)] max-w-7xl items-center gap-12 lg:grid-cols-[0.9fr_1.1fr]">
@@ -53,8 +110,20 @@ export function DepthPresentationSection() {
             Website premium harus terasa mahal sejak scroll pertama.
           </h2>
           <p className="mt-7 max-w-2xl text-lg leading-8 text-slate-300 md:text-xl">
-            Visual orbit, kedalaman, statistik, dan business signal agar EXPROSA terlihat seperti partner teknologi.
+            Visual 3D, network cloud, statistik, dan business signal agar EXPROSA terlihat seperti partner teknologi serius.
           </p>
+          <div className="mt-9 grid gap-4 sm:grid-cols-3">
+            {[
+              ["3D", "Interactive core"],
+              ["520+", "Particle cloud"],
+              ["15", "Network nodes"],
+            ].map(([value, label]) => (
+              <div key={label} className="rounded-[1.5rem] border border-white/10 bg-white/[0.07] p-5 shadow-2xl shadow-black/20 backdrop-blur-xl">
+                <p className="text-3xl font-black tracking-[-0.05em] text-cyan-200">{value}</p>
+                <p className="mt-2 text-xs font-bold uppercase tracking-[0.18em] text-slate-400">{label}</p>
+              </div>
+            ))}
+          </div>
         </div>
 
         <div className="relative min-h-[680px]">
