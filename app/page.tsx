@@ -1,6 +1,7 @@
 import { DiagnosticSection } from "@/components/DiagnosticSection";
 import { FAQSection } from "@/components/FAQSection";
 import { Footer } from "@/components/Footer";
+import { HelixPresentationSection } from "@/components/HelixPresentationSection";
 import { Hero } from "@/components/Hero";
 import { Navbar } from "@/components/Navbar";
 import { PackageSection } from "@/components/PackageSection";
@@ -25,6 +26,7 @@ export default function Home() {
       <Navbar />
       <Hero />
       <ProofStrip />
+      <HelixPresentationSection />
       <ProblemSection />
       <ScrollStorySection />
       <ServiceGrid />
