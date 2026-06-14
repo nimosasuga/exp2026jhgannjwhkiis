@@ -39,11 +39,11 @@ export function VisualShowcase() {
   );
 
   return (
-    <section id="showcase" ref={container} className="relative overflow-hidden px-6 py-32 lg:px-10 lg:py-40">
+    <section id="showcase" ref={container} className="relative overflow-hidden px-6 pb-28 pt-12 lg:px-10 lg:pb-32 lg:pt-16">
       <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_50%_25%,rgba(34,211,238,0.18),transparent_34%),radial-gradient(circle_at_20%_76%,rgba(16,185,129,0.16),transparent_32%)]" />
       <div className="absolute inset-x-0 top-0 -z-10 h-px bg-gradient-to-r from-transparent via-white/15 to-transparent" />
 
-      <div className="mx-auto grid max-w-7xl gap-14 lg:grid-cols-[0.86fr_1.14fr]">
+      <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[0.86fr_1.14fr] lg:gap-14">
         <div className="lg:sticky lg:top-28 lg:h-fit">
           <p className="text-sm font-semibold uppercase tracking-[0.3em] text-cyan-300">Visual System</p>
           <h2 className="mt-5 text-balance text-4xl font-black tracking-[-0.055em] text-white md:text-6xl">
@@ -66,7 +66,7 @@ export function VisualShowcase() {
           </div>
         </div>
 
-        <div className="relative min-h-[760px]">
+        <div className="relative min-h-[660px] lg:min-h-[720px]">
           <div className="showcase-device absolute left-1/2 top-8 w-[min(100%,520px)] -translate-x-1/2 rounded-[3rem] border border-white/10 bg-[#070a12] p-4 shadow-[0_50px_160px_rgba(0,0,0,0.55)]">
             <div className="rounded-[2.4rem] border border-white/10 bg-white/[0.04] p-4">
               <div className="flex items-center justify-between border-b border-white/10 pb-4">
@@ -104,9 +104,9 @@ export function VisualShowcase() {
             const Icon = item.icon;
             const positions = [
               "left-0 top-0 md:left-3 md:top-4",
-              "right-0 top-64 md:right-2 md:top-52",
-              "left-2 top-[470px] md:left-8 md:top-[440px]",
-              "right-1 top-[610px] md:right-10 md:top-[585px]",
+              "right-0 top-60 md:right-2 md:top-52",
+              "left-2 top-[430px] md:left-8 md:top-[420px]",
+              "right-1 top-[560px] md:right-10 md:top-[550px]",
             ];
 
             return (
