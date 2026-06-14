@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef } from "react";
-import { motion, useScroll, useTransform } from "motion/react";
+import { motion, type MotionValue, useScroll, useTransform } from "motion/react";
 import { ArrowUpRight, Bot, LayoutDashboard, LineChart, MessageCircle } from "lucide-react";
 
 const storyItems = [
@@ -38,6 +38,51 @@ const storyItems = [
     note: "measurable path",
   },
 ];
+
+type StoryCardProps = {
+  item: (typeof storyItems)[number];
+  index: number;
+  progress: MotionValue<number>;
+};
+
+function StoryCard({ item, index, progress }: StoryCardProps) {
+  const start = index / storyItems.length;
+  const mid = start + 0.12;
+  const end = (index + 1) / storyItems.length;
+  const y = useTransform(progress, [start, end], [120, -16]);
+  const opacity = useTransform(progress, [Math.max(0, start - 0.08), mid, end], [0.35, 1, 0.92]);
+  const rotate = useTransform(progress, [start, end], [index % 2 === 0 ? -3 : 3, 0]);
+  const Icon = item.icon;
+
+  return (
+    <motion.article
+      style={{ y, opacity, rotate }}
+      className="group relative overflow-hidden rounded-[2.25rem] border border-white/10 bg-white/[0.075] p-6 shadow-2xl shadow-black/20 backdrop-blur transition hover:border-cyan-300/40"
+    >
+      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-cyan-300/60 to-transparent opacity-0 transition group-hover:opacity-100" />
+      <div className="flex items-start justify-between gap-5">
+        <div className="flex items-center gap-4">
+          <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white text-slate-950">
+            <Icon className="h-6 w-6" />
+          </div>
+          <div>
+            <p className="font-mono text-xs font-black uppercase tracking-[0.24em] text-cyan-200">
+              0{index + 1} / {item.label}
+            </p>
+            <h3 className="mt-2 text-2xl font-black tracking-[-0.03em] text-white md:text-3xl">
+              {item.title}
+            </h3>
+          </div>
+        </div>
+        <div className="text-right">
+          <p className="text-3xl font-black text-emerald-300">{item.stat}</p>
+          <p className="mt-1 max-w-24 text-xs leading-4 text-slate-400">{item.note}</p>
+        </div>
+      </div>
+      <p className="mt-6 max-w-2xl text-base leading-7 text-slate-300">{item.body}</p>
+    </motion.article>
+  );
+}
 
 export function ScrollStorySection() {
   const sectionRef = useRef<HTMLElement | null>(null);
@@ -102,40 +147,9 @@ export function ScrollStorySection() {
             </div>
 
             <div className="relative mt-7 grid gap-5">
-              {storyItems.map((item, index) => {
-                const start = index / storyItems.length;
-                const end = (index + 1) / storyItems.length;
-                const y = useTransform(scrollYProgress, [start, end], [110, -10]);
-                const opacity = useTransform(scrollYProgress, [Math.max(0, start - 0.08), start, end], [0.35, 1, 1]);
-                const rotate = useTransform(scrollYProgress, [start, end], [index % 2 === 0 ? -3 : 3, 0]);
-                const Icon = item.icon;
-
-                return (
-                  <motion.article
-                    key={item.title}
-                    style={{ y, opacity, rotate }}
-                    className="group relative overflow-hidden rounded-[2.25rem] border border-white/10 bg-white/[0.075] p-6 shadow-2xl shadow-black/20 backdrop-blur transition hover:border-cyan-300/40"
-                  >
-                    <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-cyan-300/60 to-transparent opacity-0 transition group-hover:opacity-100" />
-                    <div className="flex items-start justify-between gap-5">
-                      <div className="flex items-center gap-4">
-                        <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white text-slate-950">
-                          <Icon className="h-6 w-6" />
-                        </div>
-                        <div>
-                          <p className="font-mono text-xs font-black uppercase tracking-[0.24em] text-cyan-200">0{index + 1} / {item.label}</p>
-                          <h3 className="mt-2 text-2xl font-black tracking-[-0.03em] text-white md:text-3xl">{item.title}</h3>
-                        </div>
-                      </div>
-                      <div className="text-right">
-                        <p className="text-3xl font-black text-emerald-300">{item.stat}</p>
-                        <p className="mt-1 max-w-24 text-xs leading-4 text-slate-400">{item.note}</p>
-                      </div>
-                    </div>
-                    <p className="mt-6 max-w-2xl text-base leading-7 text-slate-300">{item.body}</p>
-                  </motion.article>
-                );
-              })}
+              {storyItems.map((item, index) => (
+                <StoryCard key={item.title} item={item} index={index} progress={scrollYProgress} />
+              ))}
             </div>
           </motion.div>
         </div>
