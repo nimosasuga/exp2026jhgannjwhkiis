@@ -3,14 +3,12 @@ import { DepthPresentationSection } from "@/components/DepthPresentationSection"
 import { DiagnosticSection } from "@/components/DiagnosticSection";
 import { FAQSection } from "@/components/FAQSection";
 import { Footer } from "@/components/Footer";
-import { HelixPresentationSection } from "@/components/HelixPresentationSection";
 import { Hero } from "@/components/Hero";
 import { Navbar } from "@/components/Navbar";
 import { PackageSection } from "@/components/PackageSection";
 import { ProblemSection } from "@/components/ProblemSection";
 import { ProcessSection } from "@/components/ProcessSection";
 import { ProofStrip } from "@/components/ProofStrip";
-import { ScrollStorySection } from "@/components/ScrollStorySection";
 import { ServiceGrid } from "@/components/ServiceGrid";
 import { VisualShowcase } from "@/components/VisualShowcase";
 import { jsonLd } from "@/data/site";
@@ -29,10 +27,8 @@ export default function Home() {
       <Navbar />
       <Hero />
       <ProofStrip />
-      <HelixPresentationSection />
       <DepthPresentationSection />
       <ProblemSection />
-      <ScrollStorySection />
       <ServiceGrid />
       <VisualShowcase />
       <ProcessSection />
