@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import {
   motion,
   useMotionValueEvent,
@@ -79,6 +79,21 @@ function useSceneProgress() {
   });
 
   return { ref, scrollYProgress };
+}
+
+function ShatterShard({ shard, progress }: { shard: (typeof shards)[number]; progress: any }) {
+  const x = useTransform(progress, [0, 1], [0, shard.dx]);
+  const y = useTransform(progress, [0, 1], [0, shard.dy]);
+  const rotate = useTransform(progress, [0, 1], [0, shard.rotate]);
+  const opacity = useTransform(progress, [0, 0.2, 1], [0.15, shard.opacity, 0.82]);
+  const scale = useTransform(progress, [0, 0.55, 1], [0.7, 1.45, 0.9]);
+
+  return (
+    <motion.span
+      style={{ left: shard.left, top: shard.top, width: shard.size, height: shard.size, x, y, rotate, opacity, scale }}
+      className="absolute z-20 rounded-full bg-slate-950 shadow-[0_0_40px_rgba(15,23,42,0.24)]"
+    />
+  );
 }
 
 function Header() {
@@ -223,21 +238,9 @@ function FourDScene() {
           </div>
 
           <div className="relative min-h-[620px] [perspective:1600px]">
-            {shards.map((shard) => {
-              const x = useTransform(shatterPower, [0, 1], [0, shard.dx]);
-              const y = useTransform(shatterPower, [0, 1], [0, shard.dy]);
-              const rotate = useTransform(shatterPower, [0, 1], [0, shard.rotate]);
-              const opacity = useTransform(shatterPower, [0, 0.2, 1], [0.15, shard.opacity, 0.82]);
-              const scale = useTransform(shatterPower, [0, 0.55, 1], [0.7, 1.45, 0.9]);
-
-              return (
-                <motion.span
-                  key={shard.id}
-                  style={{ left: shard.left, top: shard.top, width: shard.size, height: shard.size, x, y, rotate, opacity, scale }}
-                  className="absolute z-20 rounded-full bg-slate-950 shadow-[0_0_40px_rgba(15,23,42,0.24)]"
-                />
-              );
-            })}
+            {shards.map((shard) => (
+              <ShatterShard key={shard.id} shard={shard} progress={shatterPower} />
+            ))}
 
             <motion.div
               style={{ x: sceneX, y: sceneY, scale: sceneScale, rotateX, rotateY, filter: blur }}
