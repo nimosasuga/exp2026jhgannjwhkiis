@@ -1,6 +1,6 @@
 {
   "name": "exprosa-landing-2026",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -13,7 +13,7 @@
     "gsap": "latest",
     "lucide-react": "latest",
     "motion": "latest",
-    "next": "16.2.9",
+    "next": "16.2.2",
     "react": "latest",
     "react-dom": "latest"
   },
@@ -24,7 +24,7 @@
     "@types/react": "latest",
     "@types/react-dom": "latest",
     "eslint": "latest",
-    "eslint-config-next": "16.2.9",
+    "eslint-config-next": "16.2.2",
     "tailwindcss": "latest",
     "typescript": "latest"
   }
