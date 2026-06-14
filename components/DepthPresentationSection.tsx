@@ -11,7 +11,7 @@ function Orb() {
   const lines = useRef<THREE.LineSegments>(null);
 
   const cloud = useMemo(() => {
-    const count = 520;
+    const count = 420;
     const data = new Float32Array(count * 3);
     for (let i = 0; i < count; i += 1) {
       const radius = 1.55 + Math.random() * 1.8;
@@ -26,10 +26,10 @@ function Orb() {
   }, []);
 
   const network = useMemo(() => {
-    const nodes = Array.from({ length: 15 }, (_, i) => {
-      const a = (i / 15) * Math.PI * 2;
-      const r = 2.15 + (i % 3) * 0.28;
-      return new THREE.Vector3(Math.cos(a) * r, Math.sin(i * 1.37) * 1.15, Math.sin(a) * r);
+    const nodes = Array.from({ length: 12 }, (_, i) => {
+      const a = (i / 12) * Math.PI * 2;
+      const r = 2.05 + (i % 3) * 0.24;
+      return new THREE.Vector3(Math.cos(a) * r, Math.sin(i * 1.37) * 1.05, Math.sin(a) * r);
     });
     const data = new Float32Array(nodes.length * 2 * 3);
     nodes.forEach((node, i) => {
@@ -81,16 +81,16 @@ function Orb() {
       </lineSegments>
 
       <mesh ref={core}>
-        <icosahedronGeometry args={[1.2, 4]} />
+        <icosahedronGeometry args={[1.1, 4]} />
         <meshStandardMaterial color="#22D3EE" roughness={0.16} metalness={0.7} transparent opacity={0.34} wireframe />
       </mesh>
 
       <mesh rotation={[Math.PI / 2, 0, 0]}>
-        <torusGeometry args={[2.1, 0.015, 12, 160]} />
+        <torusGeometry args={[2, 0.015, 12, 150]} />
         <meshBasicMaterial color="#67E8F9" transparent opacity={0.82} />
       </mesh>
       <mesh rotation={[Math.PI / 2.5, 0.4, 0]}>
-        <torusGeometry args={[2.85, 0.01, 12, 190]} />
+        <torusGeometry args={[2.65, 0.01, 12, 170]} />
         <meshBasicMaterial color="#6EE7B7" transparent opacity={0.48} />
       </mesh>
     </group>
@@ -99,11 +99,11 @@ function Orb() {
 
 export function DepthPresentationSection() {
   return (
-    <section id="depth-impact" className="relative z-10 min-h-screen overflow-hidden px-6 py-24 text-white lg:px-10">
+    <section id="depth-impact" className="relative z-10 overflow-hidden px-6 py-16 text-white lg:px-10 lg:py-20">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_40%,rgba(34,211,238,0.28),transparent_32%),radial-gradient(circle_at_75%_60%,rgba(16,185,129,0.2),transparent_34%),linear-gradient(180deg,rgba(5,6,10,0.04),rgba(5,6,10,0.9))]" />
       <div className="absolute inset-0 premium-grid opacity-25" />
 
-      <div className="relative mx-auto grid min-h-[calc(100vh-12rem)] max-w-7xl items-center gap-12 lg:grid-cols-[0.9fr_1.1fr]">
+      <div className="relative mx-auto grid max-w-7xl items-center gap-10 lg:grid-cols-[0.9fr_1.1fr]">
         <div>
           <p className="text-sm font-black uppercase tracking-[0.3em] text-cyan-300">Premium Impact Layer</p>
           <h2 className="mt-7 max-w-3xl text-5xl font-black tracking-[-0.07em] md:text-7xl lg:text-8xl">
@@ -115,8 +115,8 @@ export function DepthPresentationSection() {
           <div className="mt-9 grid gap-4 sm:grid-cols-3">
             {[
               ["3D", "Interactive core"],
-              ["520+", "Particle cloud"],
-              ["15", "Network nodes"],
+              ["420+", "Particle cloud"],
+              ["12", "Network nodes"],
             ].map(([value, label]) => (
               <div key={label} className="rounded-[1.5rem] border border-white/10 bg-white/[0.07] p-5 shadow-2xl shadow-black/20 backdrop-blur-xl">
                 <p className="text-3xl font-black tracking-[-0.05em] text-cyan-200">{value}</p>
@@ -126,7 +126,7 @@ export function DepthPresentationSection() {
           </div>
         </div>
 
-        <div className="relative min-h-[680px]">
+        <div className="relative min-h-[520px] lg:min-h-[610px]">
           <div className="absolute inset-0 rounded-[3rem] border border-white/10 bg-white/[0.035] shadow-[0_60px_180px_rgba(0,0,0,0.55)] backdrop-blur-xl" />
           <Canvas className="absolute inset-0" camera={{ position: [0, 0, 6], fov: 45 }} dpr={[1, 1.5]} gl={{ antialias: true, alpha: true }}>
             <Orb />
