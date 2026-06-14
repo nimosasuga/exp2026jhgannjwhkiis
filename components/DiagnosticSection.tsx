@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { ArrowRight, SearchCheck } from "lucide-react";
-import { AnimatedSection } from "@/components/AnimatedSection";
+import AnimatedSection from "@/components/AnimatedSection";
 import { diagnostics, site } from "@/data/site";
 
 export function DiagnosticSection() {
