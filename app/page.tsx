@@ -1,3 +1,4 @@
+import { AmbientParticleLayer } from "@/components/AmbientParticleLayer";
 import { DiagnosticSection } from "@/components/DiagnosticSection";
 import { FAQSection } from "@/components/FAQSection";
 import { Footer } from "@/components/Footer";
@@ -22,6 +23,7 @@ export default function Home() {
       />
       <div className="pointer-events-none fixed inset-0 z-0 noise-overlay opacity-[0.035]" />
       <div className="pointer-events-none fixed inset-0 z-0 bg-[radial-gradient(circle_at_top_left,rgba(34,211,238,0.2),transparent_28%),radial-gradient(circle_at_top_right,rgba(16,185,129,0.14),transparent_24%)]" />
+      <AmbientParticleLayer />
 
       <Navbar />
       <Hero />
